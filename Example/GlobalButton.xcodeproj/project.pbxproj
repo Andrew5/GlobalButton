@@ -37,10 +37,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		029E22FF0EFEC4279DFEA362 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		029E22FF0EFEC4279DFEA362 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		050C20DD8857E6720F5856BC /* Pods_GlobalButton_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GlobalButton_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		12415B52A02A24585825FDAA /* Pods-GlobalButton_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GlobalButton_Tests.debug.xcconfig"; path = "Target Support Files/Pods-GlobalButton_Tests/Pods-GlobalButton_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		5BA42D79ED69F19A7CA01C2E /* GlobalButton.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = GlobalButton.podspec; path = ../GlobalButton.podspec; sourceTree = "<group>"; };
+		5BA42D79ED69F19A7CA01C2E /* GlobalButton.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = GlobalButton.podspec; path = ../GlobalButton.podspec; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* GlobalButton_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GlobalButton_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6003F58F195388D20070C39A /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -65,7 +65,7 @@
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		9133000D51787830F7CD70C5 /* Pods_GlobalButton_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GlobalButton_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9AFDE7B5D11E740E1BFD30D6 /* Pods-GlobalButton_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GlobalButton_Example.release.xcconfig"; path = "Target Support Files/Pods-GlobalButton_Example/Pods-GlobalButton_Example.release.xcconfig"; sourceTree = "<group>"; };
-		9B514CEC81806C708E65AFD7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		9B514CEC81806C708E65AFD7 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		CD12273C299A4EEE7EA40093 /* Pods-GlobalButton_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GlobalButton_Tests.release.xcconfig"; path = "Target Support Files/Pods-GlobalButton_Tests/Pods-GlobalButton_Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -193,7 +193,6 @@
 				12415B52A02A24585825FDAA /* Pods-GlobalButton_Tests.debug.xcconfig */,
 				CD12273C299A4EEE7EA40093 /* Pods-GlobalButton_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -227,7 +226,6 @@
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
-				2EE165A5C438F66C8CE224BE /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -259,6 +257,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -316,24 +315,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		2EE165A5C438F66C8CE224BE /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-GlobalButton_Tests/Pods-GlobalButton_Tests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/FBSnapshotTestCase/FBSnapshotTestCase.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBSnapshotTestCase.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-GlobalButton_Tests/Pods-GlobalButton_Tests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		56D0EFD093CCE019F0EB36CA /* [CP] Check Pods Manifest.lock */ = {

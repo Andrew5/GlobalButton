@@ -7,7 +7,5 @@ target 'GlobalButton_Example' do
 
   target 'GlobalButton_Tests' do
     inherit! :search_paths
-
-    pod 'FBSnapshotTestCase'
   end
 end

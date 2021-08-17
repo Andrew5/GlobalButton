@@ -1,29 +1,29 @@
 # GlobalButton
 
-[![CI Status](https://img.shields.io/travis/localhost3585@gmail.com/GlobalButton.svg?style=flat)](https://travis-ci.org/localhost3585@gmail.com/GlobalButton)
-[![Version](https://img.shields.io/cocoapods/v/GlobalButton.svg?style=flat)](https://cocoapods.org/pods/GlobalButton)
-[![License](https://img.shields.io/cocoapods/l/GlobalButton.svg?style=flat)](https://cocoapods.org/pods/GlobalButton)
-[![Platform](https://img.shields.io/cocoapods/p/GlobalButton.svg?style=flat)](https://cocoapods.org/pods/GlobalButton)
 
 ## Example
+//可以直接把GlobalButton 文件夹拖到项目中引用头文件使用
+#import "DHGlobalConfig.h"
+[DHGlobalConfig setEnvironmentMap:@{
+    @"UAT":@"www.UAT.com",
+    @"PRO":@"www.PRO.com",
+    @"SIT":@"www.SIT.com",
+} currentEnv:DHGlobalConfig.envstring];
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+测试方法
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self showErrorAlert:DHGlobalConfig.envstring];
+}
+- (void)showErrorAlert:(NSString *)errorString
+{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UIAlertController *ac = [UIAlertController alertControllerWithTitle:nil message:errorString preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"确定" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        }];
+        [ac addAction:action];
+        [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:ac animated:YES completion:nil];
+    });
+}
 
 ## Requirements
-
-## Installation
-
-GlobalButton is available through [CocoaPods](https://cocoapods.org). To install
-it, simply add the following line to your Podfile:
-
-```ruby
-pod 'GlobalButton'
-```
-
-## Author
-
-localhost3585@gmail.com, localhost3585@gmail.com
-
-## License
-
-GlobalButton is available under the MIT license. See the LICENSE file for more info.
