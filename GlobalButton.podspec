@@ -20,11 +20,11 @@ Pod::Spec.new do |spec|
   spec.description      = <<-DESC
                           全局悬浮按钮操作
                        DESC
-  spec.homepage         = 'https://github.com/localhost3585@gmail.com/GlobalButton'
+  spec.homepage         = 'https://github.com/Andrew5/GlobalButton'
   spec.license          = { :type => 'MIT', :file => 'LICENSE' }
-  spec.author           = { 'localhost3585@gmail.com' => 'localhost3585@gmail.com' }
+  spec.author           = { '大海' => 'https://github.com/Andrew5' }
   #使用v前缀的tag值和子模块
-  spec.source           = { :git => 'https://github.com/localhost3585@gmail.com/GlobalButton.git', :tag => spec.version.to_s }
+  spec.source           = { :git => 'git@github.com:Andrew5/GlobalButton.git', :tag => spec.version.to_s }
 #  s.author           = { 'miniLV' => 'https://github.com/miniLV' }
 #  s.source           = { :git => 'https://github.com/miniLV/MNFloatBtn.git', :tag => s.version.to_s }
   spec.source_files = 'Classes/*.{h,m}'
