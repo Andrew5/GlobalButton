@@ -39,7 +39,6 @@ static NSString * _evnstring = nil;
     if (self = [super initWithFrame:frame]) {
         NSString *title = [NSString stringWithFormat:@"Ver:%@ %@\n",SystemVersionFloat,self.environmentStr];
         [self setTitle:title forState:UIControlStateNormal];
-//        [self.layer addSublayer:[self setGradualChangingColor:self fromColor:[UIColor colorWithRed:0/255.0f green:197/255.0f blue:205/255.0f alpha:0.6] toColor:[UIColor colorWithRed:0/255.0f green:229/255.0f blue:238/255.0f alpha:0.8] threeColor:[UIColor colorWithRed:0/255.0f green:245/255.0f blue:255/255.0f alpha:1]]];
         self.backgroundColor = [UIColor colorWithRed:0/255.0f green:197/255.0f blue:205/255.0f alpha:1];
         self.clipsToBounds = YES;
         self.layer.cornerRadius = 10;
