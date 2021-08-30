@@ -68,6 +68,7 @@ CGFloat screenH = 0;
         [_globalButton showcontentButton];
     });
     [_globalButton show];
+    return _globalButton;
 }
 
 - (void)show{

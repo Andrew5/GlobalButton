@@ -27,9 +27,13 @@ Pod::Spec.new do |spec|
   spec.source           = { :git => 'git@github.com:Andrew5/GlobalButton.git', :tag => spec.version.to_s }
 #  s.author           = { 'miniLV' => 'https://github.com/miniLV' }
 #  s.source           = { :git => 'https://github.com/miniLV/MNFloatBtn.git', :tag => s.version.to_s }
-  spec.source_files = 'Classes/*.{h,m}'
+  spec.source_files = "GlobalButton/Classes/DHGlobalConfig.h",
+                      "GlobalButton/Classes/DHGlobalConfig.m",
+                      "GlobalButton/Classes/DHGlobalContentButton.h",
+                      "GlobalButton/Classes/DHGlobalContentButton.m",
+                      "GlobalButton/Classes/Unity.h",
+                      "GlobalButton/Classes/Unity.m"
   spec.public_header_files = 'Classes/DHGlobalConfig.h'
   spec.ios.deployment_target = '9.0'
-  spec.source_files = 'GlobalButton/Classes/**/*'
  
 end
