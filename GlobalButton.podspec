@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name             = 'GlobalButton'#跟podspec文件名相同
-  spec.version          = '1.0.0'#版本是必须要填的
+  spec.version          = '1.0.1'#版本是必须要填的
   spec.summary          = 'A short description of GlobalButton.'#描述是必填的
 
 # This description is used to generate tags and improve search results.

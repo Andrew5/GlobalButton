@@ -12,6 +12,11 @@
 static DHGlobalConfig *_globalButton;
 //静态环境变量标识
 static NSString * _envstring;
+static NSString * _HostDomain ;
+static NSString * _HostURL ;
+static NSString * _HtmlURL ;
+
+//static NSDictionary * _tmpDict;
 
 CGFloat contentButtonW = 49;
 CGFloat contentButtonH = 30;
@@ -27,6 +32,8 @@ CGFloat screenH = 0;
 }
 //声明悬浮的按钮
 @property (nonatomic, strong) DHGlobalContentButton *globalContentButton;
+//@property (nonatomic, copy, class, readonly) NSDictionary *tmpDict;
+
 //初始化全局按钮
 + (DHGlobalContentButton *)sharedInstanceButton;
 
@@ -44,17 +51,6 @@ CGFloat screenH = 0;
         self.frame = frame;
     }
     return self;
-}
-
-+ (NSString *)envstring {
-    if (_envstring == nil) {
-        _envstring = DHGlobalContentButton.evnstring.length == 0 ? [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"] : DHGlobalContentButton.evnstring;
-    }
-    return _envstring;
-}
-
-+ (void)setEnvstring:(NSString *)envstring{
-    _envstring = envstring;
 }
 
 //初始化全局按钮
@@ -102,15 +98,30 @@ CGFloat screenH = 0;
 
 + (void)setEnvironmentMap:(NSDictionary *)environmentMap
                currentEnv:(NSString *)currentEnv{
-    [self sharedInstanceButton];//初始化按钮
-    [_globalButton.globalContentButton setEnvironmentMap:environmentMap currentEnvir:currentEnv];//设置环境变量
-    _envstring = currentEnv;//获取当前环境
+    if (currentEnv.length <= 0 || currentEnv == nil) {
+        currentEnv = @"UAT";
+    }
+    //初始化按钮
+    [self sharedInstanceButton];
+    //设置环境变量
+    [_globalButton.globalContentButton setEnvironmentMap:environmentMap currentEnvir:currentEnv];
+    //重置环境
+    _globalButton.globalContentButton.environmentMap = environmentMap;
+    //获取当前环境
+    _envstring = currentEnv;
+    //环境配置
+    _HostDomain = DHGlobalConfig.HostDomain;
+    _HostURL = DHGlobalConfig.HostURL;
+    _HtmlURL = DHGlobalConfig.HtmlURL;
 }
 
 - (void)changeEnv{
     //点击切换环境
     [self.globalContentButton changeEnvironment];
     //更新环境
+    _HostDomain = DHGlobalContentButton.HostDomain;
+    _HostURL = DHGlobalContentButton.HostURL;
+    _HtmlURL = DHGlobalContentButton.HtmlURL;
     _envstring = DHGlobalContentButton.evnstring;
 }
 
@@ -212,5 +223,66 @@ CGFloat screenH = 0;
     [self setMovingDirectionWithbuttonX:buttonX buttonY:buttonY];
 }
 
+#pragma mark - set、get方法
+
++(NSString *)HostURL{
+    if (_HostURL == nil) {
+        NSDictionary *tmpDict = [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"];
+        DHGlobalContentButton.HostURL = tmpDict[@"HostURL"];
+        _HostURL = DHGlobalContentButton.HostURL;
+        NSLog(@"%@",_HostURL);
+    }
+    return _HostURL;
+}
+
++(NSString *)HostDomain{
+    if (_HostDomain == nil) {
+        NSDictionary *tmpDict = [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"];
+        DHGlobalContentButton.HostDomain = tmpDict[@"HostDomain"];
+        _HostDomain = DHGlobalContentButton.HostDomain;
+    }
+    return _HostDomain;
+}
+
++(NSString *)HtmlURL{
+    if (_HtmlURL == nil) {
+        NSDictionary *tmpDict = [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"];
+        DHGlobalContentButton.HtmlURL = tmpDict[@"HtmlURL"];
+        _HtmlURL= DHGlobalContentButton.HtmlURL;
+    }
+    return _HtmlURL;
+}
+
+//+ (NSDictionary *)tmpDict{
+//    return _tmpDict;
+//}
+//
+//+ (void)setTmpDict:(NSDictionary *)tmpDict{
+//    _tmpDict = tmpDict;
+//}
+
++ (void)setHostURL:(NSString *)HostURL{
+    _HostURL = HostURL;
+}
+
++ (void)setHostDomain:(NSString *)HostDomain{
+    _HostDomain = HostDomain;
+}
+
++ (void)setHtmlURL:(NSString *)HtmlURL{
+    _HtmlURL = HtmlURL;
+}
+
++ (NSString *)envstring {
+    if (_envstring == nil) {
+        NSDictionary *tmpDict = [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"];
+        _envstring = tmpDict[@"TAG"];
+    }
+    return _envstring;
+}
+
++ (void)setEnvstring:(NSString *)envstring{
+    _envstring = envstring;
+}
 @end
 

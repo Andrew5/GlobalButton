@@ -12,8 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface DHGlobalConfig : UIWindow
 
-//获取环境
+//获取当前环境标识
 @property (nonatomic, copy, class,readonly) NSString *envstring;
+
+//对应环境
+@property (nonatomic, copy, class, readonly) NSString *HostDomain;
+@property (nonatomic, copy, class, readonly) NSString *HostURL;
+@property (nonatomic, copy, class, readonly) NSString *HtmlURL;
+
 //设置环境
 + (void)setEnvironmentMap:(NSDictionary *)environmentMap
                currentEnv:(NSString *)currentEnv;
