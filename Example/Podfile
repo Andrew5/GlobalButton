@@ -3,7 +3,7 @@ use_frameworks!
 platform :ios, '9.0'
 
 target 'GlobalButton_Example' do
-  pod 'GlobalButton', :path => '../'
+  pod 'GlobalButton', :path => '../',:subspecs => ['only']#complex only
 
   target 'GlobalButton_Tests' do
     inherit! :search_paths
