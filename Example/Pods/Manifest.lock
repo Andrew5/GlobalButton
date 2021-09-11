@@ -1,16 +1,16 @@
 PODS:
-  - GlobalButton (1.0.0)
+  - GlobalButton/only (1.0.2)
 
 DEPENDENCIES:
-  - GlobalButton (from `../`)
+  - GlobalButton/only (from `../`)
 
 EXTERNAL SOURCES:
   GlobalButton:
     :path: "../"
 
 SPEC CHECKSUMS:
-  GlobalButton: 200ebb4c3cbab908966f581ad15f90f7c000e09d
+  GlobalButton: df2f7913034fdc830e08e7de0e55f13847f9abc0
 
-PODFILE CHECKSUM: f938607a0fa66becbf72eb61d760a5d39f54275a
+PODFILE CHECKSUM: e763cde7b2dacbf539d57668abf442c076f16d5b
 
 COCOAPODS: 1.10.1

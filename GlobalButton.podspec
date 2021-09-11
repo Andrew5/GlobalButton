@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |spec|
   spec.name             = 'GlobalButton'#跟podspec文件名相同
-  spec.version          = '1.0.1'#版本是必须要填的
+  spec.version          = '1.0.2'#版本是必须要填的
   spec.summary          = 'A short description of GlobalButton.'#描述是必填的
 
 # This description is used to generate tags and improve search results.
@@ -27,13 +27,25 @@ Pod::Spec.new do |spec|
   spec.source           = { :git => 'git@github.com:Andrew5/GlobalButton.git', :tag => spec.version.to_s }
 #  s.author           = { 'miniLV' => 'https://github.com/miniLV' }
 #  s.source           = { :git => 'https://github.com/miniLV/MNFloatBtn.git', :tag => s.version.to_s }
-  spec.source_files = "GlobalButton/Classes/DHGlobalConfig.h",
-                      "GlobalButton/Classes/DHGlobalConfig.m",
-                      "GlobalButton/Classes/DHGlobalContentButton.h",
-                      "GlobalButton/Classes/DHGlobalContentButton.m",
-                      "GlobalButton/Classes/Unity.h",
-                      "GlobalButton/Classes/Unity.m"
-  spec.public_header_files = 'Classes/DHGlobalConfig.h'
+  spec.subspec 'only' do |o|
+      o.source_files = "GlobalButton/Classes/DHGlobalConfig.h",
+                       "GlobalButton/Classes/DHGlobalConfig.m",
+                       "GlobalButton/Classes/DHGlobalContentButton.h",
+                       "GlobalButton/Classes/DHGlobalContentButton.m",
+                       "GlobalButton/Classes/Unity.h",
+                       "GlobalButton/Classes/Unity.m"
+      o.public_header_files = 'Classes/DHGlobalConfig.h'
+  end
+  spec.subspec 'complex' do |c|
+      c.source_files = "GlobalButton/Classes/DHGlobeManager.h",
+                       "GlobalButton/Classes/DHGlobeManager.m",
+                       "GlobalButton/Classes/DHGlobalView.h",
+                       "GlobalButton/Classes/DHGlobalView.m",
+                       "GlobalButton/Classes/DHHomeDataListView.h",
+                       "GlobalButton/Classes/DHHomeDataListView.m"
+      c.public_header_files = "GlobalButton/Classes/DHGlobeManager.h"
+  end
+  spec.default_subspec = 'only'
   spec.ios.deployment_target = '9.0'
  
 end

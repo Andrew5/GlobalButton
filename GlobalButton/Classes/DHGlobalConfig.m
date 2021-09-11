@@ -20,8 +20,8 @@ static NSString * _HtmlURL ;
 
 CGFloat contentButtonW = 49;
 CGFloat contentButtonH = 30;
-CGFloat screenW = 0;
-CGFloat screenH = 0;
+CGFloat screenWidth = 0;
+CGFloat screenHeight = 0;
 
 @interface DHGlobalConfig(){
     //拖动按钮的起始坐标点
@@ -45,8 +45,8 @@ CGFloat screenH = 0;
     if (self = [super initWithFrame:frame]) {
         CGFloat contentButtonX = 0;
         CGFloat contentButtonY = 60;
-        screenW = [UIScreen mainScreen].bounds.size.width;
-        screenH = [UIScreen mainScreen].bounds.size.height;
+        screenWidth = [UIScreen mainScreen].bounds.size.width;
+        screenHeight = [UIScreen mainScreen].bounds.size.height;
         frame = CGRectMake(contentButtonX, contentButtonY, 120, contentButtonH);
         self.frame = frame;
     }
@@ -57,7 +57,7 @@ CGFloat screenH = 0;
 + (DHGlobalConfig *)sharedInstanceButton{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CGFloat contentButtonX = screenW - contentButtonW;
+        CGFloat contentButtonX = screenWidth - contentButtonW;
         CGFloat contentButtonY = 60;
         _globalButton = [[DHGlobalConfig alloc] initWithFrame:CGRectMake(contentButtonX, contentButtonY, contentButtonW, contentButtonH)];
         _globalButton.rootViewController = [[UIViewController alloc]init];
@@ -126,10 +126,10 @@ CGFloat screenH = 0;
 }
 
 - (void)setMovingDirectionWithbuttonX:(CGFloat)buttonX buttonY:(CGFloat)buttonY{
-    if (self.center.x >= screenW/2) {
+    if (self.center.x >= screenWidth/2) {
         [UIView animateWithDuration:0.5 animations:^{
             //按钮靠右自动吸边
-            CGFloat buttonX = screenW - 10;
+            CGFloat buttonX = screenWidth - 10;
             self.frame = CGRectMake(buttonX, buttonY, 120, contentButtonH);
         }];
     }else{
@@ -166,8 +166,8 @@ CGFloat screenH = 0;
     //默认都是有导航条的，有导航条的，父试图高度就要被导航条占据，固高度不够
     CGFloat defaultNaviHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + [Unity sharedInstance].getCurrentVC.navigationController.navigationBar.frame.size.height;
     //父试图的宽高
-    CGFloat superViewWidth = screenW;
-    CGFloat superViewHeight = screenH;
+    CGFloat superViewWidth = screenWidth;
+    CGFloat superViewHeight = screenHeight;
     CGFloat buttonX = self.frame.origin.x;
     CGFloat buttonY = self.frame.origin.y;
     CGFloat buttonW = self.frame.size.width;

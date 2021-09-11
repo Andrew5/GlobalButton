@@ -7,17 +7,43 @@
 //
 
 #import "DHAppDelegate.h"
+//#import "DHGlobeManager.h"
+#import "DHGlobalConfig.h"
 
 @implementation DHAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    NSDictionary *dictURL = @{
+        @"UAT":@{
+                @"HostDomain":@"我是UAT环境网络Domain接口",
+                @"HostURL":@"我是UAT环境网络URL接口",
+                @"HtmlURL":@"我是UAT环境H5URL"
+        },
+        @"PRO":@{
+                @"HostDomain":@"我是PRO环境网络Domain接口",
+                @"HostURL":@"我是PRO环境网络URL接口",
+                @"HtmlURL":@"我是PRO环境H5URL"
+        },
+        @"SIT":@{
+                @"HostDomain":@"我是SIT环境网络Domain接口",
+                @"HostURL":@"我是SIT环境网络URL接口",
+                @"HtmlURL":@"我是SIT环境H5URL"
+        }
+    };
+//    [[DHGlobeManager sharedInstance]setEnvironmentMap:dictURL];
+    [DHGlobalConfig setEnvironmentMap:dictURL currentEnv:DHGlobalConfig.envstring];
+
     // Override point for customization after application launch.
     return YES;
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
+    NSLog(@"1、%@",DHGlobalConfig.HostURL);
+    NSLog(@"2、%@",DHGlobalConfig.HostDomain);
+    NSLog(@"3、%@",DHGlobalConfig.HtmlURL);
+    NSLog(@"aoppdele标示、%@",DHGlobalConfig.envstring);
     // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
     // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
 }
