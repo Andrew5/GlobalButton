@@ -62,11 +62,11 @@ static NSString * _HostURL;
     //更新当前环境按钮状态
     [self p_updateBtnTitle];
     //更新环境状态
-    [self environmentSet];
+    [self saveEnvironment];
 
 }
 
-- (void)environmentSet{
+- (void)saveEnvironment{
     NSString *saveBaseUrlKey = @"DHGlobalConfigURL";
     DHGlobalContentButton.HostURL = self.environmentMap[self.environmentStr];
     [self.tmpDict setObject:DHGlobalContentButton.HostURL forKey:@"HostURL"];
@@ -86,7 +86,7 @@ static NSString * _HostURL;
     }];
     self.environmentStr = envStr;
     self.environmentMap = environmentMap;
-    [self environmentSet];
+    [self saveEnvironment];
     [self p_updateBtnTitle];
 }
 
