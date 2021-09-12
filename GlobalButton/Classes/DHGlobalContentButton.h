@@ -16,10 +16,9 @@ typedef void (^ContentButtonClick)(UIButton *sender);
 //外部访问当前环境
 @property (nonatomic, copy, class)NSString *evnstring;
 @property (nonatomic, strong)NSDictionary *environmentMap;
+
 ///UAT、SIT、PRO环境对应的网址
-@property (nonatomic, copy, class)NSString *HostDomain;
 @property (nonatomic, copy, class)NSString *HostURL;
-@property (nonatomic, copy, class)NSString *HtmlURL;
 
 //按钮点击事件
 @property (nonatomic, copy)ContentButtonClick buttonClick;

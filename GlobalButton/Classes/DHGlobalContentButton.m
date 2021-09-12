@@ -9,12 +9,7 @@
 #import "DHGlobalContentButton.h"
 
 static NSString * _evnstring = nil;
-
-
-static NSString * _HostDomain;
 static NSString * _HostURL;
-static NSString * _HtmlURL;
-
 
 @interface DHGlobalContentButton()
 
@@ -53,7 +48,6 @@ static NSString * _HtmlURL;
 
 //设置环境变量
 - (void)changeEnvironment{
-    
     NSArray *envKeys = self.environmentMap.allKeys;
     if (!envKeys || envKeys.count <= 0) {
         NSLog(@"请设置环境变量");
@@ -64,33 +58,18 @@ static NSString * _HtmlURL;
         currentIndex = [envKeys indexOfObject:self.environmentStr];
     }
     NSInteger nextEnvIndex = (currentIndex + 1) % envKeys.count;
-    
     self.environmentStr = envKeys[nextEnvIndex];
     //更新当前环境按钮状态
     [self p_updateBtnTitle];
-    
-//    NSString *envBaseUrl = self.environmentMap[self.environmentStr];
     //更新环境状态
     [self environmentSet];
 
 }
+
 - (void)environmentSet{
     NSString *saveBaseUrlKey = @"DHGlobalConfigURL";
-
-    if (self.environmentMap[self.environmentStr] == nil) {
-        DHGlobalContentButton.evnstring = self.environmentStr;
-        DHGlobalContentButton.HostURL = self.environmentMap[@"HostURL"];
-        DHGlobalContentButton.HostDomain = self.environmentMap[@"HostDomain"];
-        DHGlobalContentButton.HtmlURL = self.environmentMap[@"HtmlURL"];
-    }else{
-        DHGlobalContentButton.evnstring = self.environmentStr;
-        DHGlobalContentButton.HostURL = self.environmentMap[self.environmentStr][@"HostURL"];
-        DHGlobalContentButton.HostDomain = self.environmentMap[self.environmentStr][@"HostDomain"];
-        DHGlobalContentButton.HtmlURL = self.environmentMap[self.environmentStr][@"HtmlURL"];
-    }
+    DHGlobalContentButton.HostURL = self.environmentMap[self.environmentStr];
     [self.tmpDict setObject:DHGlobalContentButton.HostURL forKey:@"HostURL"];
-    [self.tmpDict setObject:DHGlobalContentButton.HostDomain forKey:@"HostDomain"];
-    [self.tmpDict setObject:DHGlobalContentButton.HtmlURL forKey:@"HtmlURL"];
     [self.tmpDict setObject:self.environmentStr forKey:@"TAG"];
     [[NSUserDefaults standardUserDefaults]setObject:self.tmpDict forKey:saveBaseUrlKey];
 }
@@ -99,16 +78,14 @@ static NSString * _HtmlURL;
 - (void)setEnvironmentMap:(NSDictionary *)environmentMap
              currentEnvir:(NSString *)currentEnvir{
     __block NSString *envStr = @"测试";
-    __block NSDictionary *dict = [NSDictionary dictionary];
     [environmentMap enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         if ([currentEnvir isEqualToString:key]) {
             envStr = key;
-            dict = obj;
             *stop = YES;
         }
     }];
     self.environmentStr = envStr;
-    self.environmentMap = dict;
+    self.environmentMap = environmentMap;
     [self environmentSet];
     [self p_updateBtnTitle];
 }
@@ -120,7 +97,6 @@ static NSString * _HtmlURL;
         [self setTitle:title forState:UIControlStateNormal];
     });
 }
-
 
 - (NSString *)environmentStr{
     if (!_environmentStr) {
@@ -145,16 +121,5 @@ static NSString * _HtmlURL;
 + (void)setHostURL:(NSString *)HostURL{
     _HostURL = HostURL;
 }
-+ (NSString *)HostDomain{
-    return _HostDomain;
-}
-+ (void)setHostDomain:(NSString *)HostDomain{
-    _HostDomain = HostDomain;
-}
-+ (NSString *)HtmlURL{
-    return _HtmlURL;
-}
-+ (void)setHtmlURL:(NSString *)HtmlURL{
-    _HtmlURL = HtmlURL;
-}
+
 @end

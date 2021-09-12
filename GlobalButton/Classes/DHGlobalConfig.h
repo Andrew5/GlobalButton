@@ -16,9 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy, class,readonly) NSString *envstring;
 
 //对应环境
-@property (nonatomic, copy, class, readonly) NSString *HostDomain;
 @property (nonatomic, copy, class, readonly) NSString *HostURL;
-@property (nonatomic, copy, class, readonly) NSString *HtmlURL;
 
 //设置环境
 + (void)setEnvironmentMap:(NSDictionary *)environmentMap
