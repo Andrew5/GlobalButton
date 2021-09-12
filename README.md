@@ -4,7 +4,6 @@
 
 ## Use
 可以直接把GlobalButton 相关代码{DHGlobalConfig,DHGlobalContentButton,Unity}拖到项目中引用DHGlobalConfig头文件使用
-pod 'GlobalButton',:branch =>'master'
 pod 'GlobalButton',:subspecs => ['complex']
 pod 'GlobalButton',:subspecs => ['only']
 
@@ -20,8 +19,6 @@ pod 'GlobalButton',:subspecs => ['only']
 } currentEnv:DHGlobalConfig.envstring];
 或者
 使用相对复杂场景，例如原生与H5交互，但是每个页面的请求还不相同：
-
-#import "DHGlobeManager.h"
 
 NSDictionary *dictURL = @{
     @"UAT":@{
@@ -44,8 +41,6 @@ NSDictionary *dictURL = @{
 //complex 分支(界面选择窗口)
 [[DHGlobeManager sharedInstance]setEnvironmentMap:dictURL]
 
-//only 分支(轮询加载环境)
-[DHGlobalConfig setEnvironmentMap:dictURL currentEnv:DHGlobalConfig.envstring]
 
 
 ## Test
@@ -53,15 +48,13 @@ NSDictionary *dictURL = @{
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 //complex 分支
-    NSLog(@"1、%@",DHGlobeManager.HostURL);
-    NSLog(@"2、%@",DHGlobeManager.HostDomain);
-    NSLog(@"3、%@",DHGlobeManager.HtmlURL);
-    NSLog(@"4、%@",DHGlobeManager.envstring);
-//only 分支亦或master分支
-        NSLog(@"1、%@",DHGlobalConfig.HostURL);
-        NSLog(@"2、%@",DHGlobalConfig.HostDomain);
-        NSLog(@"3、%@",DHGlobalConfig.HtmlURL);
-        NSLog(@"aoppdele标示、%@",DHGlobalConfig.envstring);
+    NSLog(@"1、%@",DHGlobalConfig.HostURL);
+    NSLog(@"2、%@",DHGlobalConfig.HostDomain);
+    NSLog(@"3、%@",DHGlobalConfig.HtmlURL);
+    NSLog(@"4、%@",DHGlobalConfig.envstring);
+//master分支
+    NSLog(@"1、%@",DHGlobalConfig.HostURL);
+    NSLog(@"aoppdele标示、%@",DHGlobalConfig.envstring);
 }
 
 ## Use  branch
@@ -69,8 +62,7 @@ NSDictionary *dictURL = @{
 单一场景
 pod 'GlobalButton', :branch =>'master'
 复杂场景
-pod 'GlobalButton', :subspecs => ['only']
-亦或 (带UI选择界面)
+亦或 
 pod 'GlobalButton', :subspecs => ['complex']
 
 
