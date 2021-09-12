@@ -9,15 +9,15 @@
 #import "DHGlobalContentButton.h"
 
 static NSString * _evnstring = nil;
+static NSString * _HostURL;
 
 @interface DHGlobalContentButton()
 
 //当前展示的环境
 @property (nonatomic, copy)NSString *environmentStr;
-
-@property (nonatomic, copy)NSDictionary *environmentMap;
-
+//本地保存环境对象
 @property (nonatomic, strong) NSUserDefaults *defaults;
+@property (nonatomic, strong) NSMutableDictionary *tmpDict;
 
 @end
 @implementation DHGlobalContentButton
@@ -34,11 +34,11 @@ static NSString * _evnstring = nil;
     return instance;
 }
 
-
 - (instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
         NSString *title = [NSString stringWithFormat:@"Ver:%@ %@\n",SystemVersionFloat,self.environmentStr];
         [self setTitle:title forState:UIControlStateNormal];
+        self.tmpDict = [NSMutableDictionary dictionary];
         self.backgroundColor = [UIColor colorWithRed:0/255.0f green:197/255.0f blue:205/255.0f alpha:1];
         self.clipsToBounds = YES;
         self.layer.cornerRadius = 10;
@@ -48,7 +48,6 @@ static NSString * _evnstring = nil;
 
 //设置环境变量
 - (void)changeEnvironment{
-    
     NSArray *envKeys = self.environmentMap.allKeys;
     if (!envKeys || envKeys.count <= 0) {
         NSLog(@"请设置环境变量");
@@ -59,25 +58,20 @@ static NSString * _evnstring = nil;
         currentIndex = [envKeys indexOfObject:self.environmentStr];
     }
     NSInteger nextEnvIndex = (currentIndex + 1) % envKeys.count;
-    
     self.environmentStr = envKeys[nextEnvIndex];
     //更新当前环境按钮状态
     [self p_updateBtnTitle];
-    
-    NSString *envBaseUrl = self.environmentMap[self.environmentStr];
     //更新环境状态
+    [self environmentSet];
+
+}
+
+- (void)environmentSet{
     NSString *saveBaseUrlKey = @"DHGlobalConfigURL";
-    [[NSUserDefaults standardUserDefaults]setObject:envBaseUrl forKey:saveBaseUrlKey];
-    DHGlobalContentButton.evnstring = envBaseUrl;
-    
-}
-
-+ (NSString *)evnstring{
-    return _evnstring;
-}
-
-+ (void)setEvnstring:(NSString *)evnstring{
-    _evnstring = evnstring;
+    DHGlobalContentButton.HostURL = self.environmentMap[self.environmentStr];
+    [self.tmpDict setObject:DHGlobalContentButton.HostURL forKey:@"HostURL"];
+    [self.tmpDict setObject:self.environmentStr forKey:@"TAG"];
+    [[NSUserDefaults standardUserDefaults]setObject:self.tmpDict forKey:saveBaseUrlKey];
 }
 
 //设置环境变量
@@ -85,13 +79,14 @@ static NSString * _evnstring = nil;
              currentEnvir:(NSString *)currentEnvir{
     __block NSString *envStr = @"测试";
     [environmentMap enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
-        if ([currentEnvir isEqualToString:obj]) {
+        if ([currentEnvir isEqualToString:key]) {
             envStr = key;
             *stop = YES;
         }
     }];
     self.environmentStr = envStr;
     self.environmentMap = environmentMap;
+    [self environmentSet];
     [self p_updateBtnTitle];
 }
 
@@ -103,12 +98,28 @@ static NSString * _evnstring = nil;
     });
 }
 
-
 - (NSString *)environmentStr{
     if (!_environmentStr) {
         _environmentStr = @"环境";
     }
     return _environmentStr;
+}
+#pragma mark -set、get方法
+//标示
++ (NSString *)evnstring{
+    return _evnstring;
+}
+
++ (void)setEvnstring:(NSString *)evnstring{
+    _evnstring = evnstring;
+}
+
+//分别配置环境
++ (NSString *)HostURL{
+    return _HostURL;
+}
++ (void)setHostURL:(NSString *)HostURL{
+    _HostURL = HostURL;
 }
 
 @end

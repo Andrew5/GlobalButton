@@ -12,11 +12,14 @@
 static DHGlobalConfig *_globalButton;
 //静态环境变量标识
 static NSString * _envstring;
+static NSString * _HostURL ;
+
+//static NSDictionary * _tmpDict;
 
 CGFloat contentButtonW = 49;
 CGFloat contentButtonH = 30;
-CGFloat screenW = 0;
-CGFloat screenH = 0;
+CGFloat screenWidth = 0;
+CGFloat screenHeight = 0;
 
 @interface DHGlobalConfig(){
     //拖动按钮的起始坐标点
@@ -27,6 +30,8 @@ CGFloat screenH = 0;
 }
 //声明悬浮的按钮
 @property (nonatomic, strong) DHGlobalContentButton *globalContentButton;
+//@property (nonatomic, copy, class, readonly) NSDictionary *tmpDict;
+
 //初始化全局按钮
 + (DHGlobalContentButton *)sharedInstanceButton;
 
@@ -38,30 +43,19 @@ CGFloat screenH = 0;
     if (self = [super initWithFrame:frame]) {
         CGFloat contentButtonX = 0;
         CGFloat contentButtonY = 60;
-        screenW = [UIScreen mainScreen].bounds.size.width;
-        screenH = [UIScreen mainScreen].bounds.size.height;
+        screenWidth = [UIScreen mainScreen].bounds.size.width;
+        screenHeight = [UIScreen mainScreen].bounds.size.height;
         frame = CGRectMake(contentButtonX, contentButtonY, 120, contentButtonH);
         self.frame = frame;
     }
     return self;
 }
 
-+ (NSString *)envstring {
-    if (_envstring == nil) {
-        _envstring = DHGlobalContentButton.evnstring.length == 0 ? [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"] : DHGlobalContentButton.evnstring;
-    }
-    return _envstring;
-}
-
-+ (void)setEnvstring:(NSString *)envstring{
-    _envstring = envstring;
-}
-
 //初始化全局按钮
 + (DHGlobalConfig *)sharedInstanceButton{
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CGFloat contentButtonX = screenW - contentButtonW;
+        CGFloat contentButtonX = screenWidth - contentButtonW;
         CGFloat contentButtonY = 60;
         _globalButton = [[DHGlobalConfig alloc] initWithFrame:CGRectMake(contentButtonX, contentButtonY, contentButtonW, contentButtonH)];
         _globalButton.rootViewController = [[UIViewController alloc]init];
@@ -102,23 +96,34 @@ CGFloat screenH = 0;
 
 + (void)setEnvironmentMap:(NSDictionary *)environmentMap
                currentEnv:(NSString *)currentEnv{
-    [self sharedInstanceButton];//初始化按钮
-    [_globalButton.globalContentButton setEnvironmentMap:environmentMap currentEnvir:currentEnv];//设置环境变量
-    _envstring = currentEnv;//获取当前环境
+    if (currentEnv.length <= 0 || currentEnv == nil) {
+        currentEnv = @"UAT";
+    }
+    //初始化按钮
+    [self sharedInstanceButton];
+    //设置环境变量
+    [_globalButton.globalContentButton setEnvironmentMap:environmentMap currentEnvir:currentEnv];
+    //重置环境
+    _globalButton.globalContentButton.environmentMap = environmentMap;
+    //获取当前环境
+    _envstring = currentEnv;
+    //环境配置
+    _HostURL = DHGlobalConfig.HostURL;
 }
 
 - (void)changeEnv{
     //点击切换环境
     [self.globalContentButton changeEnvironment];
     //更新环境
+    _HostURL = DHGlobalContentButton.HostURL;
     _envstring = DHGlobalContentButton.evnstring;
 }
 
 - (void)setMovingDirectionWithbuttonX:(CGFloat)buttonX buttonY:(CGFloat)buttonY{
-    if (self.center.x >= screenW/2) {
+    if (self.center.x >= screenWidth/2) {
         [UIView animateWithDuration:0.5 animations:^{
             //按钮靠右自动吸边
-            CGFloat buttonX = screenW - 10;
+            CGFloat buttonX = screenWidth - 10;
             self.frame = CGRectMake(buttonX, buttonY, 120, contentButtonH);
         }];
     }else{
@@ -136,7 +141,6 @@ CGFloat screenH = 0;
     //按钮刚按下的时候，获取此时的起始坐标
     UITouch *touch = [touches anyObject];
     _touchPoint = [touch locationInView:self];
-
     _touchbuttonX = self.frame.origin.x;
     _touchbuttonY = self.frame.origin.y;
 }
@@ -155,8 +159,8 @@ CGFloat screenH = 0;
     //默认都是有导航条的，有导航条的，父试图高度就要被导航条占据，固高度不够
     CGFloat defaultNaviHeight = [[UIApplication sharedApplication] statusBarFrame].size.height + [Unity sharedInstance].getCurrentVC.navigationController.navigationBar.frame.size.height;
     //父试图的宽高
-    CGFloat superViewWidth = screenW;
-    CGFloat superViewHeight = screenH;
+    CGFloat superViewWidth = screenWidth;
+    CGFloat superViewHeight = screenHeight;
     CGFloat buttonX = self.frame.origin.x;
     CGFloat buttonY = self.frame.origin.y;
     CGFloat buttonW = self.frame.size.width;
@@ -212,5 +216,28 @@ CGFloat screenH = 0;
     [self setMovingDirectionWithbuttonX:buttonX buttonY:buttonY];
 }
 
+#pragma mark - set、get方法
++(NSString *)HostURL{
+    if (_HostURL == nil) {
+        NSDictionary *tmpDict = [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"];
+        DHGlobalContentButton.HostURL = tmpDict[@"HostURL"];
+        _HostURL = DHGlobalContentButton.HostURL;
+        NSLog(@"%@",_HostURL);
+    }
+    return _HostURL;
+}
++ (void)setHostURL:(NSString *)HostURL{
+    _HostURL = HostURL;
+}
++ (NSString *)envstring {
+    if (_envstring == nil) {
+        NSDictionary *tmpDict = [[NSUserDefaults standardUserDefaults]objectForKey:@"DHGlobalConfigURL"];
+        _envstring = tmpDict[@"TAG"];
+    }
+    return _envstring;
+}
++ (void)setEnvstring:(NSString *)envstring{
+    _envstring = envstring;
+}
 @end
 
