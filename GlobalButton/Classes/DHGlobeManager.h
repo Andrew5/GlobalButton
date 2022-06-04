@@ -14,23 +14,29 @@
 //-(instancetype) copy __attribute__((unavailable("call sharedInstance instead")));\
 //-(instancetype) mutableCopy __attribute__((unavailable("call sharedInstance instead")));\
 
-
 NS_ASSUME_NONNULL_BEGIN
 
+
+
+typedef void (^restartCallback)(BOOL restartState);
+
 @interface DHGlobeManager : NSObject
+///业务回调(重置环境后续操作:清空数据、缓存等)
+@property (nonatomic, copy) restartCallback restartCallback;
+
 //获取当前环境标识
-@property (nonatomic, copy, class) NSString *envstring;
+@property (nonatomic, copy,   class) NSString *envstring;
 //对应环境
-@property (nonatomic, copy, class ) NSString *HostDomain;
-@property (nonatomic, copy, class ) NSString *HostURL;
-@property (nonatomic, copy, class ) NSString *HtmlURL;
+@property (nonatomic, copy,   class) NSString *HostDomain;
+@property (nonatomic, copy,   class) NSString *HostURL;
+@property (nonatomic, copy,   class) NSString *HtmlHomeURL;
+@property (nonatomic, copy,   class) NSString *HtmlCommunityURL;
+@property (nonatomic, copy,   class) NSString *HtmlMineURL;
 @property (nonatomic, strong, class) NSDictionary *envMap;
 
 + (DHGlobeManager *)sharedInstance;
+- (void)setEnvironmentMap:(NSDictionary *)environmentMap currectEnvironment:(NSString *)environment;
 
-- (void)install;
-
-- (void)setEnvironmentMap:(NSDictionary *)environmentMap;
 @end
 
 NS_ASSUME_NONNULL_END

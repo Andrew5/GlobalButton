@@ -55,11 +55,27 @@ NSDictionary *dictURL = @{
     NSLog(@"aoppdele标示、%@",DHGlobalConfig.envstring);
 }
 
-## Use  branch
-
+## Use  install
+OC版本安装
+CocoaPods安装: 在podfile文件中添加以下描述,然后 pod install
 单一场景
 pod 'GlobalButton', :branch =>'master'
 复杂场景
 pod 'GlobalButton', :subspecs => ['complex']
 
-
+手动导入集成
+1.拖动LSTPopView文件下5个文件到项目中
+单一场景
+DHGlobalConfig.h
+DHGlobalConfig.m
+DHGlobalContentButton.h
+DHGlobalContentButton.m
+Unity.h
+Unity.m
+复杂场景
+DHGlobeManager.h
+DHGlobeManager.m
+DHGlobalView.h
+DHGlobalView.m
+DHHomeDataListView.h
+DHHomeDataListView.m

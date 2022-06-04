@@ -7,6 +7,7 @@
 //
 #import "DHGlobeManager.h"
 #import "DHGlobalView.h"
+#import <objc/runtime.h>
 
 //#define DJ_SINGLETON_IMP(_type_) + (_type_ *)sharedInstance{\
 //static _type_ *theSharedInstance = nil;\
@@ -16,23 +17,49 @@
 //});\
 //return theSharedInstance;\
 //}
+static char NotificationAction;
+typedef void (^NotificationActionBlock)(NSNotification* sender);
+
+@interface NSNotificationCenter (CustomNotificationCenter)
+- (void)addObserver:(id)observer name:(nullable NSNotificationName)aName object:(nullable id)anObject addAction:(NotificationActionBlock)block;
+
+@end
+
+@implementation NSNotificationCenter (CustomNotificationCenter)
+
+- (void)addObserver:(id)observer name:(nullable NSNotificationName)aName object:(nullable id)anObject addAction:(NotificationActionBlock)block {
+    objc_setAssociatedObject(self, &NotificationAction, block, OBJC_ASSOCIATION_COPY_NONATOMIC);
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(action:) name:aName object:anObject];
+}
+
+- (void)action:(NSNotification *)sender {
+    NotificationActionBlock blockAction = (NotificationActionBlock)objc_getAssociatedObject(self, &NotificationAction);
+    if (blockAction) {
+        blockAction(sender);
+    }
+}
+
+@end
+
+
 static NSString * _evnstring1;
 static NSDictionary * _envMap;
-static NSString * _HostDomain1 ;
-static NSString * _HostURL1 ;
-static NSString * _HtmlURL1 ;
+static NSString * _HostDomain1;
+static NSString * _HostURL1;
+static NSString * _HtmlHomeURL1;
+static NSString * _HtmlCommunityURL1;
+static NSString * _HtmlMineURL1;
 
 @interface DHGlobeManager()
 
 @property (nonatomic,assign) CGPoint startingPosition;
 @property (nonatomic, strong) DHGlobalView *entryWindow;
-//@property (nonatomic, strong, class) NSDictionary *envMap;
 
 @end
 
 @implementation DHGlobeManager
 /*
- 由Objective-C的一些特性可以知道，在对象创建的时候，无论是alloc还是new，都会调用到 allocWithZone方法。在通过拷贝的时候创建对象时，会调用到-(id)copyWithZone:(NSZone *)zone，-(id)mutableCopyWithZone:(NSZone *)zone方法。因此，可以重写这些方法，让创建的对象唯一。
+ 由Objective-C的一些特性可以知道，在对象创建的时候，无论是alloc还是new，都会调用到 allocWithZone方法。在通过拷贝的时候创建对象时，会调用到-(id)copyWithZone:(NSZone *)zone，-(id)mutableCopyWithZone:(NSZone *)zone方法。
  */
 + (id)allocWithZone:(NSZone *)zone{
     return [DHGlobeManager sharedInstance];
@@ -71,8 +98,12 @@ static NSString * _HtmlURL1 ;
 - (void)initEntry:(CGPoint)startingPosition{
     _entryWindow = [[DHGlobalView alloc] initWithStartPoint:startingPosition];
     _entryWindow.hidden = NO;
+    [[NSNotificationCenter defaultCenter] addObserver:self name:@"restart" object:nil addAction:^(NSNotification * _Nonnull sender) {
+        if (self.restartCallback) {
+            self.restartCallback(YES);
+        }
+    }];
 }
-
 //设置默认值
 - (void)normalDataWithTag:(NSString *)tagStr{
     __block NSString *envStr = @"环境标识";
@@ -84,29 +115,33 @@ static NSString * _HtmlURL1 ;
             *stop = YES;
         }
     }];
-    _HostDomain1 =  dict[@"HostDomain"];
-    _HtmlURL1 =  dict[@"HtmlURL"];
-    _HostURL1 = dict[@"HtmlURL"];
-    _evnstring1 = tagStr;
+    ///FIXME: 数据过于限制，需要动态赋值?
+    //赋值
+    _HostDomain1        =   dict[@"HostDomain"];
+    _HtmlCommunityURL1  =   dict[@"HtmlCommunityURL"];
+    _HtmlMineURL1       =   dict[@"HtmlMineURL"];
+    _HtmlHomeURL1       =   dict[@"HtmlHomeURL"];
+    _HostURL1           =   dict[@"HostURL"];
+    _evnstring1         =   tagStr;
 
     [_entryWindow.globalButton setTitle:tagStr forState:(UIControlStateNormal)];
 }
 
 //TODO:设置环境变量
-- (void)setEnvironmentMap:(NSDictionary *)environmentMap {
+- (void)setEnvironmentMap:(NSDictionary *)environmentMap currectEnvironment:(NSString *)environment{
     [self install];
     //设置环境变量
     _envMap = environmentMap;
-    //设置默认环境
+    //设置当前环境
     if (DHGlobeManager.envstring.length <= 0 || DHGlobeManager.envstring == nil) {
-        DHGlobeManager.envstring = @"SIT";
+        DHGlobeManager.envstring = [[NSUserDefaults standardUserDefaults] objectForKey:@"TAG"] ? [[NSUserDefaults standardUserDefaults] objectForKey:@"TAG"]:environment;
         [self normalDataWithTag:DHGlobeManager.envstring];
         return;
     }
     //获取真实环境
     DHGlobeManager.envstring = DHGlobeManager.envstring;
 }
-
+///???: 需要的数据要不要写死
 #pragma mark -setter/getter
 + (NSDictionary *)envMap{
     return _envMap;
@@ -114,11 +149,12 @@ static NSString * _HtmlURL1 ;
 + (void)setEnvMap:(NSDictionary *)envMap{
     _envMap = envMap;
 }
+//原生接口
 + (NSString *)HostURL{
     return _HostURL1;
 }
-+ (void)setHostURL:(NSString *)HostURL1{
-    _HostURL1 = HostURL1;
++ (void)setHostURL:(NSString *)HostURL{
+    _HostURL1 = HostURL;
 }
 + (NSString *)HostDomain{
     return _HostDomain1;
@@ -126,13 +162,26 @@ static NSString * _HtmlURL1 ;
 + (void)setHostDomain:(NSString *)HostDomain{
     _HostDomain1 = HostDomain;
 }
-+ (NSString *)HtmlURL{
-    return _HtmlURL1;
+//H5
++ (NSString *)HtmlHomeURL{
+    return _HtmlHomeURL1;
 }
-+ (void)setHtmlURL:(NSString *)HtmlURL{
-    _HtmlURL1 = HtmlURL;
++ (void)setHtmlHomeURL:(NSString *)HtmlHomeURL{
+    _HtmlHomeURL1 = HtmlHomeURL;
 }
-//标识别
++ (NSString *)HtmlCommunityURL{
+    return _HtmlCommunityURL1;
+}
++ (void)setHtmlCommunityURL:(NSString *)HtmlCommunityURL{
+    _HtmlCommunityURL1 = HtmlCommunityURL;
+}
++ (NSString *)HtmlMineURL{
+    return _HtmlMineURL1;
+}
++ (void)setHtmlMineURL:(NSString *)HtmlMineURL{
+    _HtmlMineURL1 = HtmlMineURL;
+}
+//标识
 + (void)setEnvstring:(NSString *)envstring {
     _evnstring1 = envstring;
     

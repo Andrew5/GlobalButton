@@ -38,8 +38,6 @@ CGFloat BottomBar_H = 49+34;
         UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
         [self addGestureRecognizer:pan];
         
-        UITapGestureRecognizer *ges = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tagAddAlert)];
-//        [self addGestureRecognizer:ges];
     }
     return  self;
 }
@@ -55,20 +53,36 @@ CGFloat BottomBar_H = 49+34;
 }
 
 - (void)tagAddAlert {
-    NSLog(@"%s",__FUNCTION__);
     __weak __typeof(self)weakSelf = self;
     if ([DHHomeDataListView shareInstance].hidden) {
         [[DHHomeDataListView shareInstance] show:^(NSString * _Nonnull title) {
             [weakSelf.globalButton setTitle:title forState:(UIControlStateNormal)];
+            [self exitApplication];
         }];
     }else{
         [[DHHomeDataListView shareInstance] hide];
     }
 }
+- (void)exitApplication {
+    [UIView beginAnimations:@"exitApplication" context:nil];
+    [UIView setAnimationDuration:0.5];
+    [UIView setAnimationDelegate:self];
+    [UIView setAnimationTransition:UIViewAnimationTransitionCurlDown forView:self.window cache:NO];
+    [UIView setAnimationDidStopSelector:@selector(animationFinished:finished:context:)];
+    self.window.bounds = CGRectMake(0, 0, 0, 0);
+    [UIView commitAnimations];
+    
+}
+- (void)animationFinished:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context {
+    if ([animationID compare:@"exitApplication"] == 0) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"restart" object:nil userInfo:nil];
+//        exit(0);
+    }
+}
 
 #pragma mark  拖拽手势方法
 - (void)panAction:(UIPanGestureRecognizer *)gestureRecognizer {
-    ///  获取通过的点
+    ///获取通过的点
     CGPoint p = [gestureRecognizer translationInView:self];
     if ([gestureRecognizer state] == UIGestureRecognizerStateBegan) { // 开始滑动
     
@@ -180,7 +194,7 @@ CGFloat BottomBar_H = 49+34;
         }
         // 如果 touch 的point 在 self 的bounds 内
         if ([self pointInside:point withEvent:event]) {
-            for (UIView *subView in self.subviews) {
+            for (UIView *subView in [self.subviews reverseObjectEnumerator]) {
                 //进行坐标转化
                 CGPoint coverPoint = [subView convertPoint:point fromView:self];
                 NSLog(@"-%f-%f",coverPoint.x,coverPoint.y);
