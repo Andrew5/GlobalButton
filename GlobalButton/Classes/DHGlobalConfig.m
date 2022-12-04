@@ -57,7 +57,7 @@ CGFloat screenHeight = 0;
     dispatch_once(&onceToken, ^{
         CGFloat contentButtonX = screenWidth - contentButtonW;
         CGFloat contentButtonY = 60;
-        _globalButton = [[DHGlobalConfig alloc] initWithFrame:CGRectMake(contentButtonX, contentButtonY, contentButtonW, contentButtonH)];
+        _globalButton = [[DHGlobalConfig alloc] initWithFrame:CGRectMake(screenWidth - contentButtonW, contentButtonY, contentButtonW, contentButtonH)];
         _globalButton.rootViewController = [[UIViewController alloc]init];
         [_globalButton showcontentButton];
     });
@@ -66,7 +66,7 @@ CGFloat screenHeight = 0;
 }
 
 - (void)show{
-    UIWindow *currentKeyWindow = [UIApplication sharedApplication].keyWindow;
+    UIWindow *currentKeyWindow = [[UIApplication sharedApplication] keyWindow ];
     if (_globalButton.hidden) {
         _globalButton.hidden = NO;
     }
